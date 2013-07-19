@@ -1,0 +1,4 @@
+#!/usr/bin/env ruby
+
+require 'humr'
+Humr::Runner.bootstrap(ARGV)
