@@ -53,7 +53,8 @@ module Humr
     class Time < self
       def parsers
         @parsers ||= [
-          method(:_parse_apache_common_log_time),
+          method(:_apache_common_log_time),
+          method(:_ctime),
           ::Time.method(:iso8601),
           ::Time.method(:httpdate),
           ::Time.method(:rfc822)
@@ -64,8 +65,12 @@ module Humr
         :yellow
       end
 
-      def _parse_apache_common_log_time(s)
+      def _apache_common_log_time(s)
         ::Time.strptime(s, '%d/%b/%Y:%H:%M:%S %Z')
+      end
+
+      def _ctime(s)
+        ::Time.strptime(s, '%c')
       end
 
       def parse(s)
