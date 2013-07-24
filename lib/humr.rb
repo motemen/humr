@@ -118,11 +118,15 @@ module Humr
           s.gsub(/(\d{4,})/) do |size|
             n = size.to_f
             i = 0
-            while n > base and i < PREFIXES.length - 1
+            while n >= base and i < PREFIXES.length - 1
               n = n / base
               i = i + 1
             end
-            colorize('%.1g%s' % [ n, PREFIXES[i] ])
+            if n < 10
+              colorize('%.1f%s' % [ n, PREFIXES[i] ])
+            else
+              colorize('%d%s' % [ n, PREFIXES[i] ])
+            end
           end
         end
       end
