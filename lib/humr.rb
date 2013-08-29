@@ -7,7 +7,7 @@ module Humr
   class Runner
     def initialize(args)
       @args = args
-      @handlers = [ Handler::URI.new, Handler::BinaryPrefix.new, Handler::Time.new ]
+      @handlers = [ Handler::URI.new, Handler::BinaryPrefix.new, Handler::Time.new, Handler::UIString.new ]
     end
 
     def self.bootstrap(args)
@@ -129,6 +129,30 @@ module Humr
             end
           end
         end
+      end
+    end
+
+    class UIString < self
+      def color
+        :magenta
+      end
+
+      def rough_version(s)
+        s.sub(/(\d+\.\d+)(?:\.\d+)*/, '\1').sub(/\.0$/, '')
+      end
+
+      def format(s)
+        return nil unless %r<^(?:[\w-]+(?:/[\w.-]+)?(?:\s*\([^\)]+\))?\s*)+$>.match(s)
+
+        require 'useragent'
+
+        ua = UserAgent.parse(s)
+
+        return nil unless ua.version
+
+        return colorize(ua.os) if ua.bot?
+
+        colorize('%s %s%s' % [ ua.browser, rough_version(ua.version.to_s), if ua.os and not ua.os.empty? then " (#{rough_version(ua.os)})" end ])
       end
     end
   end
