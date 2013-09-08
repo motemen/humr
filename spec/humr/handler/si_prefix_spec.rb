@@ -5,7 +5,7 @@ describe Humr::Handler::SIPrefix do
   subject { Humr::Handler::SIPrefix.new }
 
   it 'is registered as :si' do
-    expect(Humr::Handler.handlers[:si]).to be(Humr::Handler::SIPrefix)
+    expect(Humr::Handler[:si]).to be(Humr::Handler::SIPrefix)
   end
 
   it 'handles kilo' do

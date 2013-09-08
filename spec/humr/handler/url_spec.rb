@@ -5,7 +5,7 @@ describe Humr::Handler::URL do
   subject { Humr::Handler::URL.new }
 
   it 'is registered as :url' do
-    expect(Humr::Handler.handlers[:url]).to be(Humr::Handler::URL)
+    expect(Humr::Handler[:url]).to be(Humr::Handler::URL)
   end
 
   it 'parses URL-escaped string' do

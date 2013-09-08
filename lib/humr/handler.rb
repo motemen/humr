@@ -2,17 +2,19 @@ require 'term/ansicolor'
 
 module Humr
   class Handler
-    def self.handlers
-      @@handlers ||= {}
+    @@handlers = {}
+
+    def name
+      self.class.instance_eval { @name }
     end
 
     def self.register(name)
-      @@name = name
-      handlers[name] = self
+      @@handlers[name] = self
+      @name = name
     end
 
-    def name
-      @@name
+    def self.[](name)
+      @@handlers[name]
     end
 
     def colorize(s)

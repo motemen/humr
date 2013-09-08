@@ -1,5 +1,6 @@
 require 'strscan'
 
+require 'humr/config'
 require 'humr/handler/url'
 require 'humr/handler/si_prefix'
 require 'humr/handler/time'
@@ -7,9 +8,11 @@ require 'humr/handler/user_agent'
 
 module Humr
   class Runner
+    attr_reader :config
+
     def initialize(args)
       @args = args
-      @handlers = [ Handler::URL.new, Handler::SIPrefix.new, Handler::Time.new, Handler::UserAgent.new ]
+      @config = Config.new
     end
 
     def self.bootstrap(args)
@@ -49,8 +52,14 @@ module Humr
       result
     end
 
+    def handlers
+      @handlers ||= config.handlers.map do |name|
+        Handler[name].new
+      end
+    end
+
     def human_readable(s)
-      @handlers.map do |handler|
+      handlers.map do |handler|
         readable = handler.replace(s) do |chunk|
           colorize(chunk, handler.name)
         end
@@ -60,8 +69,8 @@ module Humr
       s
     end
 
-    def colorize(s, name)
-      s
+    def colorize(chunk, handler)
+      Term::ANSIColor.send(config.color(handler), chunk)
     end
   end
 end

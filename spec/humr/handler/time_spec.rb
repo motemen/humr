@@ -4,6 +4,16 @@ require 'humr/handler/time'
 describe Humr::Handler::Time do
   subject { Humr::Handler::Time.new }
 
+  describe '#name' do
+    it 'is :time' do
+      expect(subject.name).to be(:time)
+    end
+  end
+
+  it 'is registered as :time' do
+    expect(Humr::Handler[:time]).to be(Humr::Handler::Time)
+  end
+
   it 'parses Apache common log format' do
     expect(subject.parse('17/Jul/2013:00:19:52 +0900')).to be_kind_of(Time)
   end

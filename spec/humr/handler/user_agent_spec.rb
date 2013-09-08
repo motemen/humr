@@ -5,7 +5,7 @@ describe Humr::Handler::UserAgent do
   subject { Humr::Handler::UserAgent.new }
 
   it 'is registered as :ua' do
-    expect(Humr::Handler.handlers[:ua]).to be(Humr::Handler::UserAgent)
+    expect(Humr::Handler[:ua]).to be(Humr::Handler::UserAgent)
   end
 
   it 'handles UA string (Chrome)' do
