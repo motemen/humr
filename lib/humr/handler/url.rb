@@ -9,10 +9,10 @@ module Humr
       :green
     end
 
-    def format(s)
+    def replace(s, &block)
       if /%[A-Fa-f0-9]{2}/ === s
         s.gsub(/((?:%[A-Fa-f0-9]{2})+)/) do |uri_escaped|
-          colorize(URI.unescape(uri_escaped))
+          yield URI.unescape(uri_escaped)
         end
       end
     end

@@ -13,16 +13,28 @@ module Humr
       s.sub(/(\d+\.\d+)(?:\.\d+)*/, '\1').sub(/\.0$/, '')
     end
 
-    def format(s)
-      return nil unless %r<^(?:[\w-]+(?:/[\w.-]+)?(?:\s*\([^\)]+\))?\s*)+$>.match(s)
+    UA_LIKE_PATTERN = %r<^(?:[\w-]+(?:/[\w.-]+)?(?:\s*\([^\)]+\))?\s*)+$>
+
+    def replace(s, &block)
+      return unless UA_LIKE_PATTERN.match(s)
 
       ua = ::UserAgent.parse(s)
 
-      return nil unless ua.version
+      return unless ua.version
 
-      return colorize(ua.os) if ua.bot?
+      readable = if ua.bot?
+        ua.os
+      else
+        '%s %s%s' % [
+          ua.browser,
+          rough_version(ua.version.to_s),
+          if ua.os and not ua.os.empty?
+            " (#{rough_version(ua.os)})"
+          end
+        ]
+      end
 
-      colorize('%s %s%s' % [ ua.browser, rough_version(ua.version.to_s), if ua.os and not ua.os.empty? then " (#{rough_version(ua.os)})" end ])
+      readable.sub(/.*/, &block)
     end
   end
 end

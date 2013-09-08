@@ -18,31 +18,49 @@ module Humr
 
     def run
       STDIN.each_line do |line|
-        scanner = ::StringScanner.new(line.chomp)
-        readable = ''
-        loop do
-          if s = scanner.scan(/".*?"|\[.*?\]/)
-            readable << s[0]
-            readable << human_readable(s[1..-2])
-            readable << s[-1]
-          elsif s = scanner.scan(/\S+/)
-            readable << human_readable(s)
-          elsif not scanner.eos?
-            readable << scanner.scan(/\s*/)
-          else
-            break
-          end
-        end
-        puts readable
+        puts readable_line(line.chomp)
       end
     end
 
+    def readable_line(line)
+      sub_each_field(line) do |s|
+        human_readable s
+      end
+    end
+
+    def sub_each_field(line, &block)
+      scanner = ::StringScanner.new(line)
+
+      result = ''
+      loop do
+        if s = scanner.scan(/".*?"|\[.*?\]/)
+          result << s[0]
+          result << yield(s[1..-2])
+          result << s[-1]
+        elsif s = scanner.scan(/\S+/)
+          result << yield(s)
+        elsif not scanner.eos?
+          result << scanner.scan(/\s*/)
+        else
+          break
+        end
+      end
+
+      result
+    end
+
     def human_readable(s)
-      for parser in @handlers
-        readable = parser.format(s)
+      @handlers.map do |handler|
+        readable = handler.replace(s) do |chunk|
+          colorize(chunk, handler.name)
+        end
         return readable if readable
       end
 
+      s
+    end
+
+    def colorize(s, name)
       s
     end
   end

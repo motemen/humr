@@ -36,9 +36,9 @@ module Humr
       nil
     end
 
-    def format(s)
+    def replace(s, &block)
       parsed = parse(s)
-      colorize(parsed.to_s) if parsed
+      parsed.to_s.sub(/.*/, &block) if parsed
     end
   end
 end

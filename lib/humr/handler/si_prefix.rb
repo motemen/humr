@@ -14,7 +14,7 @@ module Humr
       1000
     end
 
-    def format(s)
+    def replace(s, &block)
       if /^\d{4,}$/ === s
         s.gsub(/(\d{4,})/) do |size|
           n = size.to_f
@@ -23,11 +23,14 @@ module Humr
             n = n / base
             i = i + 1
           end
-          if n < 10
-            colorize('%.1f%s' % [ n, PREFIXES[i] ])
+
+          format = if n < 10
+            '%.1f%s'
           else
-            colorize('%d%s' % [ n, PREFIXES[i] ])
+            '%d%s'
           end
+
+          yield format % [ n, PREFIXES[i] ]
         end
       end
     end
