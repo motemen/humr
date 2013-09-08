@@ -38,4 +38,14 @@ describe Humr::Handler::UserAgent do
   it 'ignores non-ua string (HTTP request line)' do
     expect { |b| handler.replace('GET /foo/bar/1234 HTTP/1.0', &b) }.not_to yield_control
   end
+
+  describe '#rough_version' do
+    it 'rounds to first decimal point' do
+      expect(handler.rough_version('7.2.3')).to eq('7.2')
+    end
+
+    it 'cuts off trailing zeros' do
+      expect(handler.rough_version('7.0.0')).to eq('7')
+    end
+  end
 end

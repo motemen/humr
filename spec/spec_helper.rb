@@ -1,6 +1,8 @@
 require 'simplecov'
 
-SimpleCov.start
+SimpleCov.start do
+  add_filter 'spec'
+end
 
 shared_examples 'humr_handler' do |name,handler_class|
   it "is registered as :#{name}" do

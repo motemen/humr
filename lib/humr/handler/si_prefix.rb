@@ -6,10 +6,6 @@ module Humr
 
     PREFIXES = [ '' ] + %w(k M G T P E Z Y)
 
-    def color
-      :cyan
-    end
-
     def base
       1000
     end

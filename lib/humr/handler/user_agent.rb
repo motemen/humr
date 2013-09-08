@@ -5,10 +5,6 @@ module Humr
   class Handler::UserAgent < Handler
     register :ua
 
-    def color
-      :magenta
-    end
-
     def rough_version(s)
       s.sub(/(\d+\.\d+)(?:\.\d+)*/, '\1').sub(/\.0$/, '')
     end

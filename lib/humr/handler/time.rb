@@ -5,10 +5,6 @@ module Humr
   class Handler::Time < Handler
     register :time
 
-    def color
-      :yellow
-    end
-
     def parsers
       @parsers ||= [
         method(:_apache_common_log_time),

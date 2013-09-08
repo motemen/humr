@@ -1,10 +1,10 @@
 require 'spec_helper'
-require 'humr/handler/url'
+require 'humr/handler/url_escaped'
 
-describe Humr::Handler::URL do
-  subject(:handler) { Humr::Handler::URL.new }
+describe Humr::Handler::URLEscaped do
+  subject(:handler) { Humr::Handler::URLEscaped.new }
 
-  include_examples 'humr_handler', :url, Humr::Handler::URL
+  include_examples 'humr_handler', :url, Humr::Handler::URLEscaped
 
   id = lambda { |x| x }
 

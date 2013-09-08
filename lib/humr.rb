@@ -1,7 +1,7 @@
 require 'strscan'
 
 require 'humr/config'
-require 'humr/handler/url'
+require 'humr/handler/url_escaped'
 require 'humr/handler/si_prefix'
 require 'humr/handler/time'
 require 'humr/handler/user_agent'
