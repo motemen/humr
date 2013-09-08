@@ -2,17 +2,19 @@ require 'spec_helper'
 require 'humr/handler/si_prefix'
 
 describe Humr::Handler::SIPrefix do
-  subject { Humr::Handler::SIPrefix.new }
+  subject(:handler) { Humr::Handler::SIPrefix.new }
 
-  it 'is registered as :si' do
-    expect(Humr::Handler[:si]).to be(Humr::Handler::SIPrefix)
-  end
+  include_examples 'humr_handler', :si, Humr::Handler::SIPrefix
 
   it 'handles kilo' do
-    expect(subject.format('1000').uncolor).to eq('1.0k')
+    expect { |b| handler.replace('1000', &b) }.to yield_with_args('1.0k')
   end
 
   it 'handles mega' do
-    expect(subject.format((20 * 1000 * 1000).to_s).uncolor).to eq('20M')
+    expect { |b| handler.replace((20 * 1000 * 1000).to_s, &b) }.to yield_with_args('20M')
+  end
+
+  it 'ignores non-numbers' do
+    expect { |b| handler.replace('foobarbaz', &b) }.not_to yield_control
   end
 end

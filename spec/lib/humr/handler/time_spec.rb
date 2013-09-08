@@ -2,31 +2,26 @@ require 'spec_helper'
 require 'humr/handler/time'
 
 describe Humr::Handler::Time do
-  subject { Humr::Handler::Time.new }
+  subject(:handler) { Humr::Handler::Time.new }
 
-  describe '#name' do
-    it 'is :time' do
-      expect(subject.name).to be(:time)
+  include_examples 'humr_handler', :time, Humr::Handler::Time
+
+  describe '#parse' do
+    it 'parses Apache common log format' do
+      expect(handler.parse('17/Jul/2013:00:19:52 +0900')).to be_kind_of(Time)
+    end
+
+    it 'parses HTTP date format' do
+      expect(handler.parse('Tue, 16 Jul 2013 15:33:33 GMT')).to be_kind_of(Time)
+    end
+
+    it 'parses ctime format' do
+      expect(handler.parse('Tue Jul 23 13:04:11 2013 +0900')).to be_kind_of(Time)
+    end
+
+    it 'does not parse non-time string' do
+      expect(handler.parse('foobarbaz')).to be(nil)
     end
   end
 
-  it 'is registered as :time' do
-    expect(Humr::Handler[:time]).to be(Humr::Handler::Time)
-  end
-
-  it 'parses Apache common log format' do
-    expect(subject.parse('17/Jul/2013:00:19:52 +0900')).to be_kind_of(Time)
-  end
-
-  it 'parses HTTP date format' do
-    expect(subject.parse('Tue, 16 Jul 2013 15:33:33 GMT')).to be_kind_of(Time)
-  end
-
-  it 'parses ctime format' do
-    expect(subject.parse('Tue Jul 23 13:04:11 2013 +0900')).to be_kind_of(Time)
-  end
-
-  it 'does not parse non-time string' do
-    expect(subject.parse('foobarbaz')).to be(nil)
-  end
 end

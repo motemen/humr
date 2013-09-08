@@ -16,13 +16,5 @@ module Humr
     def self.[](name)
       @@handlers[name]
     end
-
-    def colorize(s)
-      Term::ANSIColor.send(color, s)
-    end
-
-    def format(s)
-      replace(s) { |s| colorize(s) }
-    end
   end
 end

@@ -59,7 +59,7 @@ module Humr
     end
 
     def human_readable(s)
-      handlers.map do |handler|
+      handlers.each do |handler|
         readable = handler.replace(s) do |chunk|
           colorize(chunk, handler.name)
         end
