@@ -1,5 +1,3 @@
-require 'term/ansicolor'
-
 module Humr
   class Handler
     @@handlers = {}
