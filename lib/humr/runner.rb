@@ -3,6 +3,7 @@ require 'humr/handler/si_prefix'
 require 'humr/handler/time'
 require 'humr/handler/user_agent'
 
+require 'term/ansicolor'
 require 'strscan'
 
 module Humr
