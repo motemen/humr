@@ -3,6 +3,8 @@ require 'strscan'
 module Humr
   module Splitter
     class Default
+      Impl[:default] = self
+
       def sub_each_field(line, &block)
         scanner = StringScanner.new(line)
 

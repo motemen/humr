@@ -3,6 +3,8 @@ require 'strscan'
 module Humr
   module Splitter
     class Pattern
+      Impl[:pattern] = self
+
       def initialize(pattern)
         @pattern = Regexp.new(pattern)
         @pattern_la = Regexp.new("(?=#{pattern})")

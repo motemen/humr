@@ -2,35 +2,26 @@ require 'humr/handler/url_escaped'
 require 'humr/handler/si_prefix'
 require 'humr/handler/time'
 require 'humr/handler/user_agent'
-require 'humr/splitter/default'
+require 'humr/splitter'
 
+require 'optparse'
 require 'term/ansicolor'
-require 'strscan'
 
 module Humr
   class Runner
-    attr_reader :config, :splitter
+    attr_reader :config
 
-    def initialize(*args)
+    def initialize(args)
       @args = args
       @config = Config.new
-      @splitter = Splitter::Default.new
     end
 
     def self.bootstrap(args)
       new(args).run
     end
 
-    def run
-      STDIN.each_line do |line|
-        puts readable_line(line.chomp)
-      end
-    end
-
-    def readable_line(line)
-      splitter.sub_each_field(line) do |field|
-        human_readable field
-      end
+    def splitter
+      @splitter ||= Splitter::Default.new
     end
 
     def handlers
@@ -39,7 +30,26 @@ module Humr
       end
     end
 
-    def human_readable(field)
+    def run
+      OptionParser.new do |opts|
+        opts.on('-s', '--splitter SPLITTER[:ARGS]', 'Specify ield splitter (default, pattern:re, ltsv)') do |splitter|
+          impl, *args = splitter.split(/:/, 2)
+          @splitter = Splitter::Impl[impl.to_sym].new(*args)
+        end
+      end.parse!(@args)
+
+      STDIN.each_line do |line|
+        puts readable_line(line.chomp)
+      end
+    end
+
+    def readable_line(line)
+      splitter.sub_each_field(line) do |field|
+        readable_field field
+      end
+    end
+
+    def readable_field(field)
       handlers.each do |handler|
         readable = handler.replace(field) do |chunk|
           colorize(chunk, handler.name)

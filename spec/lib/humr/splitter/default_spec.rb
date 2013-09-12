@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'humr/splitter'
 require 'humr/splitter/default'
 
 describe Humr::Splitter::Default do
