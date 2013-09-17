@@ -39,6 +39,10 @@ describe Humr::Handler::UserAgent do
     expect { |b| handler.replace('GET /foo/bar/1234 HTTP/1.0', &b) }.not_to yield_control
   end
 
+  it 'handles unrecognized ua string' do
+    expect { |b| handler.replace('Yeti/1.0 (NHN Corp.; http://help.naver.com/robots/)', &b) }.not_to yield_control
+  end
+
   describe '#rough_version' do
     it 'rounds to first decimal point' do
       expect(handler.rough_version('7.2.3')).to eq('7.2')

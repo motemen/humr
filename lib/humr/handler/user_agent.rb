@@ -30,7 +30,7 @@ module Humr
         ]
       end
 
-      readable.sub(/.*/, &block)
+      readable.sub(/.*/, &block) if readable
     end
   end
 end
