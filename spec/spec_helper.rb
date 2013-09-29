@@ -1,8 +1,6 @@
 require 'simplecov'
 
-SimpleCov.start do
-  add_filter 'spec'
-end
+SimpleCov.start unless ENV['CI']
 
 shared_examples 'humr_handler' do |name,handler_class|
   it "is registered as :#{name}" do
