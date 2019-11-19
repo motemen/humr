@@ -31,28 +31,33 @@ module Humr
     end
 
     def run
+      should_colorize = true
+
       OptionParser.new do |opts|
         opts.on('-s', '--splitter SPLITTER[:ARGS]', 'Specify ield splitter (default, pattern:re, ltsv)') do |splitter|
           impl, *args = splitter.split(/:/, 2)
           @splitter = Splitter::Impl[impl.to_sym].new(*args)
         end
+        opts.on('-c', '--[no-]color', "colorize output (default: true)") do |c|
+          should_colorize = c
+        end
       end.parse!(@args)
 
       STDIN.each_line do |line|
-        puts readable_line(line.chomp)
+        puts readable_line(line.chomp, should_colorize)
       end
     end
 
-    def readable_line(line)
+    def readable_line(line, should_colorize)
       splitter.sub_each_field(line) do |field|
-        readable_field field
+        readable_field(field, should_colorize)
       end
     end
 
-    def readable_field(field)
+    def readable_field(field, should_colorize)
       handlers.each do |handler|
         readable = handler.replace(field) do |chunk|
-          colorize(chunk, handler.name)
+          should_colorize ? colorize(chunk, handler.name) : chunk
         end
         return readable if readable
       end
